@@ -1,0 +1,6 @@
+*.pkl
+*.netrc
+*.pyc
+Results/
+__pycache__/
+Global_noisy_COBY_scripts/
