@@ -1,6 +1,8 @@
 *.pkl
 *.netrc
 *.pyc
+*.pdf
 Results/
 __pycache__/
 Global_noisy_COBY_scripts/
+Figs/
