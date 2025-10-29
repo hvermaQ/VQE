@@ -16,9 +16,9 @@ kappa = 0.02
 #E001 = 0.5706839345786814 #change for different noise
 eps = 10**(-5)
 
-gam1 = 1.55 #nu_0
-omg1 = 0.71 #delta
-E0INF = 4.1 #beta
+gam1 = 0.78 #nu_0
+omg1 = 0.58 #delta
+E0INF = 40 #beta
 E00 = 2 #alpha
 
 plt.rcParams.update({'font.size': 20})
@@ -34,10 +34,10 @@ def final_energy(NN, tt):
     prod = NN*tt
     return([Einf1, prod])
 
-t = np.linspace(1, 1001, 100, dtype = int)
-N = np.linspace(1, 1001, 100, dtype = int)
+t = np.linspace(1, 1001, 1000, dtype = int)
+N = np.linspace(100, 2001, 1000, dtype = int)
 
-countour_vals = [0.05, 0.10, 0.25]
+countour_vals = [0.10, 0.25, 0.5]
 
 #defining main
 def main():
@@ -65,7 +65,7 @@ if __name__=="__main__":
 
     # Create heatmap for resources with scientific notation
     axz = sns.heatmap(eng_arr, cmap="rocket", 
-                    cbar_kws={'label': 'Total algorithmic resources',
+                    cbar_kws={'label': r'$\Delta =~\text{Total algorithmic resources}$',
                              'format': ticker.ScalarFormatter(useMathText=True)})
 
     # Fix colorbar ticks to use scientific notation
@@ -83,7 +83,7 @@ if __name__=="__main__":
         min_resource_idx = np.argmin(resources)
         
         c = ax1.contour(np.arange(.5, met_arr.shape[1]), np.arange(.5, met_arr.shape[0]), 
-                        met_arr, [contour_val,], colors='white', alpha=1, linestyles='dotted', linewidths=3)
+                        met_arr, [contour_val,], colors='white', alpha=0.9, linestyles='dotted', linewidths=3)
         ax1.clabel(c, [contour_val, ], inline=1, fontsize=20)
         
         min_y = contour_points[0][min_resource_idx]
@@ -103,20 +103,20 @@ if __name__=="__main__":
     fmt.create_dummy_axis()
     c4 = ax1.contour(np.arange(.5, eng_arr.shape[1]), np.arange(.5, eng_arr.shape[0]), 
                     eng_arr, [10000, 25000, 50000, 100000, 200000], 
-                    colors='cyan', alpha=0.5, linestyles='dashed', linwidths=5)
+                    colors='cyan', alpha=0.9, linestyles='dashed', linwidths=5)
     ax1.clabel(c4, [10000, 25000, 50000, 100000, 200000], inline=1, fmt=fmt, fontsize=20)
 
-    ax1.set_xticks(np.linspace(1, 100, 10))
+    ax1.set_xticks(np.linspace(1, 1000, 10))
     ax1.set_xticklabels(np.linspace(1, 1001, 10, dtype=int), fontsize=24)
-    ax1.set_yticks(np.linspace(1, 100, 10))
-    ax1.set_yticklabels(np.linspace(1, 1001, 10, dtype=int), fontsize=24)
+    ax1.set_yticks(np.linspace(1, 1000, 10))
+    ax1.set_yticklabels(np.linspace(100, 2001, 10, dtype=int), fontsize=24)
     ax1.invert_yaxis()
     ax1.set_xlabel(r'$N_{it}$', fontsize=24)
     ax1.set_ylabel(r'$N_g$', fontsize=24)
     ax1.tick_params(axis='y', labelrotation='auto')
     ax1.tick_params(axis='x', labelrotation='auto')
     # Save figure to PDF
-    plt.savefig('en_met_eps5_HVA_poster.pdf', bbox_inches='tight', dpi=300)
+    #plt.savefig('Figs/en_met_eps5_HVA_poster.pdf', bbox_inches='tight', dpi=300)
     plt.show()
 
 
@@ -146,10 +146,10 @@ if __name__=="__main__":
         ax2.plot(contour_points[1][max_eff_idx], contour_points[0][max_eff_idx], 
                 'w*', markersize=20)
 
-    ax2.set_xticks(np.linspace(1, 100, 10))
+    ax2.set_xticks(np.linspace(1, 1000, 10))
     ax2.set_xticklabels(np.linspace(1, 1001, 10, dtype=int), fontsize=21)
-    ax2.set_yticks(np.linspace(1, 100, 10))
-    ax2.set_yticklabels(np.linspace(1, 1001, 10, dtype=int), fontsize=21)
+    ax2.set_yticks(np.linspace(1, 1000, 10))
+    ax2.set_yticklabels(np.linspace(100, 2001, 10, dtype=int), fontsize=21)
     ax2.invert_yaxis()
     # Rotate y-axis tick labels horizontally
     ax2.tick_params(axis='y', labelrotation='auto')
@@ -158,5 +158,5 @@ if __name__=="__main__":
     ax2.set_ylabel(r'$N_g$', fontsize=21)
 
     # Save figure to PDF
-    #plt.savefig('eff_met_eps5_HVA.pdf', bbox_inches='tight', dpi=300)
+    #plt.savefig('Figs/eff_met_eps5_HVA.pdf', bbox_inches='tight', dpi=300)
     plt.show()
