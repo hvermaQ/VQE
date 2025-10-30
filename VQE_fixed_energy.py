@@ -254,7 +254,7 @@ if __name__ == "__main__":
         ax1.plot(D, min_metric_per_delta, label=label)
     ax1.axhline(0.99, linestyle='--', color='k', label=r'$\mathcal{A} = 0.01$')
     #ax1.axhline(0.99, linestyle='--', color='k')
-    #ax1.set_ylim([0, 1.1])
+    ax1.set_xlim([-1,2e5])
     ax1.set_xlabel(r'$ \Delta = N_{it} \times N_g$')
     ax1.set_ylabel(r'$ \max_{N_g} (\mathcal{M}_\Delta )$')
     ax1.tick_params(axis='y')
@@ -277,7 +277,7 @@ if __name__ == "__main__":
     ax1.grid()
 
     # Inset: Efficiency vs Delta (replaced slope inset)
-    inset_ax = ax1.inset_axes([0.33, 0.12, 0.6, 0.6])  # [x0, y0, width, height] in axes fraction
+    inset_ax = ax1.inset_axes([0.37, 0.12, 0.6, 0.6])  # [x0, y0, width, height] in axes fraction
     for eps, min_metric_per_delta in min_metrics.items():
         eff = np.divide(min_metric_per_delta, D)
         coef, exp = "{:.0e}".format(eps).split("e")
@@ -291,9 +291,10 @@ if __name__ == "__main__":
     inset_ax.set_yscale('log')
     inset_ax.xaxis.set_major_formatter(FuncFormatter(pow10_formatter))
     inset_ax.yaxis.set_major_formatter(mticker.LogFormatterExponent(base=10))
-    inset_ax.set_xlabel(r'$\Delta$', fontsize=18)
-    inset_ax.set_ylabel(r'$log(\eta) = log(\mathcal{M}_\Delta / \Delta$)', fontsize=18)
-    inset_ax.tick_params(axis='both', which='major', labelsize=8)
+    inset_ax.set_xlabel(r'$\Delta$', fontsize=16, labelpad=0.5)
+    inset_ax.tick_params(axis='both', which='major', labelsize=16)
+    inset_ax.set_ylabel(r'$log(\eta) = log(\mathcal{M}_\Delta / \Delta$)', fontsize=16)
+    #inset_ax.tick_params(axis='both', which='major', labelsize=8)
     inset_ax.grid(True, alpha=0.75)
     # optional compact inset legend
     # inset_ax.legend(fontsize=7, loc='upper right')
