@@ -22,8 +22,8 @@ off = 100 #offset discovered in emperical power law
 plt.rcParams.update({'font.size': 20})
 
 # Define grid of iterations (t) and gate counts (N)
-t = np.linspace(1, 1000, 1000, dtype=int)
-N = np.linspace(1, 2000, 2000, dtype=int)
+t = np.linspace(20, 1000, 1000, dtype=int)
+N = np.linspace(20, 2000, 2000, dtype=int)
 
 # ===========================================================
 # 2. FUNCTION DEFINING THE METRIC
@@ -44,14 +44,23 @@ def final_energy(NN, tt):
         prod  : float
             Resource product NN * tt
     """
+    dep = (NN-15)/150
+    gate_energy = 10**(-7) #dressed gate energy
+    total_including_qpu_run = 96621.711*np.exp(0.262*dep) - 102781
+    only_qpu_run = 18426.225*dep + 19210.299
+    flops_per_iteration = total_including_qpu_run - only_qpu_run
+    green_500 = 72.733*(10**(9))  #FLOP/s-w
+    energy_per_iteration = flops_per_iteration/green_500 #J
+
     Einf1 = ((1 - eps)**NN) * (
         E0INF * np.exp(-kappa * NN)
         + delta
         + E00 * np.exp(-gam1 * tt * ((NN-off)**(-omg1)))
     ) - delta
 
-    prod = NN * tt
-    return [Einf1, prod]
+    energy = gate_energy*NN*energy_per_iteration*tt
+
+    return [Einf1, energy]
 
 
 # ===========================================================
@@ -86,7 +95,7 @@ if __name__ == "__main__":
     eff_arr = np.log10(np.divide(1 - met_arr, eng_arr))
 
     # Metric contour levels
-    contour_vals = [0.01, 0.02, 0.05, 0.10, 0.25, 0.50]
+    contour_vals = [0.008, 0.01, 0.02, 0.05, 0.10]
 # ===========================================================
 # 5. RESOURCES HEATMAP (Δ)
 # ===========================================================
@@ -98,7 +107,7 @@ sns.heatmap(
     cmap="YlOrBr",
     ax=ax1,
     cbar_kws={
-        'label': r'$\Delta =~\text{Total algorithmic resources}$',
+        'label': r'$\Delta_p =~\text{Total physical resources (J)}$',
         'format': ticker.ScalarFormatter(useMathText=True)
     }
 )
@@ -117,7 +126,7 @@ for contour_val in contour_vals:
         X, Y, met_arr,
         levels=[contour_val],
         colors='green',
-        alpha=0.75,
+        alpha=0.85,
         linestyles='dotted',
         linewidths=3
     )
@@ -134,9 +143,11 @@ for contour_val in contour_vals:
         t_vals = np.interp(verts[:, 0], np.arange(len(t)), t)
         N_vals = np.interp(verts[:, 1], np.arange(len(N)), N)
 
-        # Compute resources (Δ = N * t)
-        resources = N_vals * t_vals
-        min_idx = np.argmin(resources)
+        # Interpolate eng_arr values at contour vertices
+        x_idx = np.clip(np.round(verts[:, 0]).astype(int), 0, len(t)-1)
+        y_idx = np.clip(np.round(verts[:, 1]).astype(int), 0, len(N)-1)
+        eng_vals = eng_arr[y_idx, x_idx]
+        min_idx = np.argmin(eng_vals)
 
         # Coordinates in grid space for plotting the star
         x_star, y_star = verts[min_idx]
@@ -153,8 +164,8 @@ for contour_val in contour_vals:
             c,
             inline=True,
             inline_spacing=0,
-            fontsize=20,
-            fmt={contour_val: f"{contour_val:.2f}"},
+            fontsize=18,
+            fmt={contour_val: f"{contour_val:.3f}"},
             manual=[label_pos]
         )
 
@@ -165,7 +176,7 @@ for contour_val in contour_vals:
 # -------------------------------
 # (b) Brown dashed contours: Resource levels
 # -------------------------------
-resource_levels = [1e4, 1e5, 5e5, 1e6]
+resource_levels = [5e-9, 5e-8, 5e-7, 1e-6]
 c4 = ax1.contour(
     X, Y, eng_arr,
     levels=resource_levels,
@@ -185,15 +196,16 @@ for i, level in enumerate(resource_levels):
         v = mid_path.vertices
         mid_idx = len(v)//2
         x_mid, y_mid = v[mid_idx]
-        manual_positions.append((x_mid, y_mid + 500))
+        manual_positions.append((x_mid, y_mid + 100))
 
 def sci_tex(x):
-    exp = int(np.log10(x))
+    exp = int(np.floor(np.log10(abs(x))))
     base = x / (10**exp)
-    if abs(base - 1) < 1e-3:
-        return rf"$10^{{{exp}}}$"
+    if base==1:
+        res = rf"$10^{{{exp}}}$"
     else:
-        return rf"${base:.1f}\times10^{{{exp}}}$"
+        res = rf"${base:1.0f} \times 10^{{{exp}}}$"
+    return res
 
 ax1.clabel(
     c4,
@@ -213,10 +225,9 @@ ax1.invert_yaxis()
 ax1.set_xlabel(r'$N_{it}$', fontsize=24)
 ax1.set_ylabel(r'$N_g$', fontsize=24)
 
-#plt.savefig('Figs/en_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
+#plt.savefig('Figs/en_met_eps5_HVA_mod.png', bbox_inches='tight', dpi=100)
 plt.show()
 
-#fit line for optimal points
 import numpy as np
 from scipy.optimize import curve_fit
 
@@ -259,7 +270,7 @@ else:
     print('Not enough blue stars found on resource heatmap plot to fit.')
 
 plt.show()
-
+"""
 # ===========================================================
 # 6. EFFICIENCY HEATMAP (η)
 # ===========================================================
@@ -271,7 +282,7 @@ sns.heatmap(
     cmap=sns.color_palette("Greens", 12),
     ax=ax2,
     cbar_kws={'label': r'$\log_{10}(\eta)$'},
-    vmin=-7, vmax=-4,
+    vmin=0, vmax=10,
 )
 
 ax2.spines['bottom'].set_visible(True)
@@ -339,5 +350,5 @@ ax2.invert_yaxis()
 ax2.set_xlabel(r'$N_{it}$', fontsize=24)
 ax2.set_ylabel(r'$N_g$', fontsize=24)
 
-#plt.savefig('Figs/eff_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
-plt.show()
+#plt.savefig('Figs/eff_met_eps5_HVA_mod.png', bbox_inches='tight', dpi=100)
+plt.show()"""
