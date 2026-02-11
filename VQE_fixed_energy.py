@@ -245,17 +245,27 @@ if __name__ == "__main__":
     #final figure with inset
     fig, ax1 = plt.subplots(figsize=(7, 6))
 
-    for eps, min_metric_per_delta in min_metrics.items():
+    # Define shades of blue and line styles for different epsilons
+    blue_shades = ['#0B3D91', '#0E5CAD', '#1B76D1', '#3A8DE0', '#5AA7EA']
+    line_styles = ['-', '-.', ':', (0, (5, 2, 1, 2)), (0, (3, 1, 1, 1))]
+
+    for idx, (eps, min_metric_per_delta) in enumerate(min_metrics.items()):
         coef, exp = "{:.0e}".format(eps).split("e")
         if eps == 0:
             label = f"$\\epsilon = {coef}$"
         else:
             label = f"$\\epsilon = {coef} \\times 10^{{{int(exp)}}}$"
-        ax1.plot(D, min_metric_per_delta, label=label)
-    ax1.axhline(0.99, linestyle='--', color='k', label=r'$\mathcal{A} = 0.01$')
+        ax1.plot(
+            D,
+            min_metric_per_delta,
+            label=label,
+            color=blue_shades[idx % len(blue_shades)],
+            linestyle=line_styles[idx % len(line_styles)]
+        )
+    ax1.axhline(0.99, linestyle='--', color='k', label=r'$Error = 0.01$')
     #ax1.axhline(0.99, linestyle='--', color='k')
     ax1.set_xlim([-1,2e5])
-    ax1.set_xlabel(r'$ \Delta = N_{it} \times N_g$')
+    ax1.set_xlabel(r'$ \Delta = N_{it} N_g$')
     ax1.set_ylabel(r'$ \max_{N_g} (\mathcal{M}_\Delta )$')
     ax1.tick_params(axis='y')
 
@@ -278,14 +288,20 @@ if __name__ == "__main__":
 
     # Inset: Efficiency vs Delta (replaced slope inset)
     inset_ax = ax1.inset_axes([0.37, 0.12, 0.6, 0.6])  # [x0, y0, width, height] in axes fraction
-    for eps, min_metric_per_delta in min_metrics.items():
+    for idx, (eps, min_metric_per_delta) in enumerate(min_metrics.items()):
         eff = np.divide(min_metric_per_delta, D)
         coef, exp = "{:.0e}".format(eps).split("e")
         if eps == 0:
             ilabel = f"$\\epsilon = {coef}$"
         else:
             ilabel = f"$\\epsilon = {coef} \\times 10^{{{int(exp)}}}$"
-        inset_ax.plot(D, eff, label=ilabel)
+        inset_ax.plot(
+            D,
+            eff,
+            label=ilabel,
+            color=blue_shades[idx % len(blue_shades)],
+            linestyle=line_styles[idx % len(line_styles)]
+        )
 
     inset_ax.set_xscale('log')
     inset_ax.set_yscale('log')

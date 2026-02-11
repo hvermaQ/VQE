@@ -95,7 +95,7 @@ fig1, ax1 = plt.subplots(figsize=(13, 10))
 # Heatmap for total resources
 sns.heatmap(
     eng_arr,
-    cmap="YlOrBr",
+    cmap="Blues",
     ax=ax1,
     cbar_kws={
         'label': r'$\Delta =~\text{Total algorithmic resources}$',
@@ -116,7 +116,7 @@ for contour_val in contour_vals:
     c = ax1.contour(
         X, Y, met_arr,
         levels=[contour_val],
-        colors='green',
+        colors='magenta',
         alpha=0.75,
         linestyles='dotted',
         linewidths=3
@@ -142,7 +142,7 @@ for contour_val in contour_vals:
         x_star, y_star = verts[min_idx]
 
         # Plot the optimal point directly on the contour
-        ax1.plot(x_star, y_star, 'b*', markersize=18, zorder=10)
+        ax1.plot(x_star, y_star, 'r*', markersize=18, zorder=10)
 
         # Optional: place label slightly offset from contour midpoint
         v = verts[len(verts)//2]
@@ -169,7 +169,7 @@ resource_levels = [1e4, 1e5, 5e5, 1e6]
 c4 = ax1.contour(
     X, Y, eng_arr,
     levels=resource_levels,
-    colors='magenta',
+    colors='black',
     alpha=0.9,
     linestyles='dashed',
     linewidths=2,
@@ -213,7 +213,7 @@ ax1.invert_yaxis()
 ax1.set_xlabel(r'$N_{it}$', fontsize=24)
 ax1.set_ylabel(r'$N_g$', fontsize=24)
 
-#plt.savefig('Figs/en_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
+plt.savefig('Figs/en_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
 plt.show()
 
 #fit line for optimal points
@@ -286,7 +286,7 @@ for contour_val in contour_vals:
     c = ax2.contour(
         X, Y, met_arr,
         levels=[contour_val],
-        colors='blue',
+        colors='magenta',
         alpha=0.75,
         linestyles='dotted',
         linewidths=2
@@ -313,7 +313,7 @@ for contour_val in contour_vals:
         x_star, y_star = verts[max_idx]
 
         # Plot the max-efficiency point
-        ax2.plot(x_star, y_star, 'k*', markersize=18, zorder=10)
+        ax2.plot(x_star, y_star, 'r*', markersize=18, zorder=10)
 
         # Add contour label near mid vertex
         v = verts[len(verts)//2]
@@ -339,5 +339,5 @@ ax2.invert_yaxis()
 ax2.set_xlabel(r'$N_{it}$', fontsize=24)
 ax2.set_ylabel(r'$N_g$', fontsize=24)
 
-#plt.savefig('Figs/eff_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
+plt.savefig('Figs/eff_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
 plt.show()
