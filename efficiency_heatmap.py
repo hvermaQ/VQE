@@ -13,11 +13,11 @@ delta = -7.711545013271975
 kappa = 0.01
 eps = 1e-6
 
-gam1 = 0.78    # ν₀
-omg1 = 0.58    # δ
-E0INF = 4     # β
+gam1 = 1.06    # ν₀
+omg1 = 0.63    # δ
+E0INF = 3.94     # β
 E00 = 2        # α
-off = 100 #offset discovered in emperical power law 
+off = 110 #offset discovered in emperical power law 
 
 plt.rcParams.update({'font.size': 20})
 
@@ -213,7 +213,7 @@ ax1.invert_yaxis()
 ax1.set_xlabel(r'$N_{it}$', fontsize=24)
 ax1.set_ylabel(r'$N_g$', fontsize=24)
 
-plt.savefig('Figs/en_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
+#plt.savefig('Figs/en_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
 plt.show()
 
 #fit line for optimal points
@@ -339,5 +339,5 @@ ax2.invert_yaxis()
 ax2.set_xlabel(r'$N_{it}$', fontsize=24)
 ax2.set_ylabel(r'$N_g$', fontsize=24)
 
-plt.savefig('Figs/eff_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
+#plt.savefig('Figs/eff_met_eps5_HVA.png', bbox_inches='tight', dpi=100)
 plt.show()

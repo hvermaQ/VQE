@@ -112,3 +112,4 @@ def gen_circ_HVA(args):
     #circuit
     circuit = qprog.to_circ()
     return(circuit)
+

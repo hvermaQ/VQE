@@ -33,9 +33,9 @@ kappa = 0.01
 #E001 = 0.5706839345786814 #change for different noise
 #eps = 10**(-4)
 
-gam1 = 0.78 #nu_0
-omg1 = 0.58 #delta
-E0INF = 4 #beta
+gam1 = 1.09 #nu_0
+omg1 = 0.63 #delta
+E0INF = 3.94 #beta
 E00 = 2 #alpha
 
 plt.rcParams.update({'font.size': 16})
@@ -262,16 +262,16 @@ if __name__ == "__main__":
             color=blue_shades[idx % len(blue_shades)],
             linestyle=line_styles[idx % len(line_styles)]
         )
-    ax1.axhline(0.99, linestyle='--', color='k', label=r'$Error = 0.01$')
+    ax1.axhline(0.99, linestyle='--', color='k', label=r'$\delta E = 0.01$')
     #ax1.axhline(0.99, linestyle='--', color='k')
     ax1.set_xlim([-1,2e5])
-    ax1.set_xlabel(r'$ \Delta = N_{it} N_g$')
-    ax1.set_ylabel(r'$ \max_{N_g} (\mathcal{M}_\Delta )$')
+    ax1.set_xlabel(r'$ Total~algorithmic~resources,~\Delta = N_\text{it} N_\text{g}$', fontsize=20)
+    ax1.set_ylabel(r'$ \max_{N_g} (\mathcal{M}_\Delta )$', fontsize=20, labelpad=-10)
     ax1.tick_params(axis='y')
 
     # Create a second y-axis for accuracy
     ax2 = ax1.twinx()
-    ax2.set_ylabel(r'$ \min_{N_g}~(E(N_g)_\Delta) - E_{gs} $')
+    ax2.set_ylabel(r'$ \min_{N_g}~(E(N_g)_\Delta) - E_{gs} $', fontsize=20, rotation=270, labelpad=35)
 
     def accuracy_ticks(x, pos):
         return f"{1-x:.2f}"
@@ -307,9 +307,9 @@ if __name__ == "__main__":
     inset_ax.set_yscale('log')
     inset_ax.xaxis.set_major_formatter(FuncFormatter(pow10_formatter))
     inset_ax.yaxis.set_major_formatter(mticker.LogFormatterExponent(base=10))
-    inset_ax.set_xlabel(r'$\Delta$', fontsize=16, labelpad=0.5)
+    inset_ax.set_xlabel(r'$\Delta$', fontsize=18, labelpad=0.5)
     inset_ax.tick_params(axis='both', which='major', labelsize=16)
-    inset_ax.set_ylabel(r'$log(\eta) = log(\mathcal{M}_\Delta / \Delta$)', fontsize=16)
+    inset_ax.set_ylabel(r'$log(\eta) = log(\mathcal{M}_\Delta / \Delta$)', fontsize=18)
     #inset_ax.tick_params(axis='both', which='major', labelsize=8)
     inset_ax.grid(True, alpha=0.75)
     # optional compact inset legend
